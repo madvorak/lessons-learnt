@@ -1,0 +1,150 @@
+\documentclass{beamer}
+\usetheme{default}
+\usepackage{listings}
+\lstset{mathescape, basicstyle=\ttfamily}
+
+\title{Lessons learnt from formalizing theoretical~computer~science}
+\author{Martin Dvorak}
+
+
+\begin{document}
+
+\begin{frame}[plain]
+\maketitle
+\end{frame}
+
+\begin{frame}
+\frametitle{What is Lean}
+Lean 4 is a powerful programming language
+
+Emphasis on formal verification
+
+Type system based on the Calculus of Inductive Constructions
+
+Large library of formally-verified mathematics (over $10^5$ lemmas)
+\end{frame}
+
+\begin{frame}
+\frametitle{Showcase in VS Code}
+\pause
+The rest is all about my mistakes
+\pause (and what I learnt from them
+\pause (sometimes))
+\end{frame}
+
+\begin{frame}
+\frametitle{Trying to prove a statement that doesn't hold}
+\pause
+Yeah, duh!
+\end{frame}
+
+\begin{frame}
+\frametitle{Grammars are closed under concatenation}
+\pause
+Construction:
+\begin{align*} 
+	G_1 &= ( N_1, T, P_1, S_1 ) \\ 
+	G_2 &= ( N_2, T, P_2, S_2 ) \\
+	G\; &= ( N_1 \mskip-2mu\cup\mskip-1mu N_2 \mskip-2mu\cup\mskip-1mu \{ S \},\;
+	T,\;\, P_1 \mskip-2mu\cup\mskip-1mu P_2
+	\mskip-1mu\cup \{ S \rightarrow S_1 S_2 \},\: S\mskip1mu )
+\end{align*}
+\pause
+Counterexample:
+\begin{align*}
+	P_1 &= \{ S_1 \rightarrow S_1 a,\, S_1 \rightarrow \epsilon \} \\
+	P_2 &= \{ S_2 \rightarrow S_2 a,\, S_2 \rightarrow \epsilon,\, a S_2 \rightarrow b \}
+\end{align*}
+\pause
+We get:
+$$ L_1 = L_2 = \{ a^n \,|\, n \in \mathbb{N}_0 \} = L_1 L_2 $$
+\pause
+However:
+$$ S \Rightarrow S_1 S_2 \Rightarrow S_1 a\mskip1mu S_2 \Rightarrow S_1 b \Rightarrow b $$
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Carelessly assuming union of assumptions}
+\begin{lstlisting}
+[OrderedCancelAddCommMonoid C]
+lemma Function.HasMaxCutProperty.
+    forbids_commutativeFractionalPolymorphism
+
+[OrderedAddCommMonoidWithInfima C]
+lemma FractionalOperation.
+    IsFractionalPolymorphismFor.
+    expressivePowerVCSP
+
+[OrderedCancelAddCommMonoidWithInfima C]
+theorem ValuedCSP.CanExpressMaxCut.
+    forbids_commutativeFractionalPolymorphism
+\end{lstlisting}
+The two latter classes extend \texttt{[CompleteSemilatticeInf C]}.
+\pause
+The assumption is too strong!
+\begin{lstlisting}
+($\exists$ x y : C, x < y) $\rightarrow$ False
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Not taking time to develop good notation}
+We write $A\,x$ using a function \texttt{Matrix.mulVec}
+\begin{lstlisting}
+A.mulVec x
+\end{lstlisting}
+We write $x^\top\!A$ using a function \texttt{Matrix.vecMul}
+\begin{lstlisting}
+Matrix.vecMul x A
+\end{lstlisting}
+\pause
+\bigskip
+Now we have infix operators \texttt{*$_v$} and \texttt{$_v$*}
+\begin{lstlisting}
+A *$_v$ x
+x $_v$* A
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Not factoring out useful lemmas}
+\begin{lstlisting}
+lemma {x$_1$ x$_2$ z$_1$ z$_2$ : List T} {a$_1$ a$_2$ : T}
+    (notin_x : a$_2$ $\notin$ x$_1$) (notin_z : a$_2$ $\notin$ z$_1$) :
+  (x$_1$ ++ [a$_1$] ++ z$_1$) = (x$_2$ ++ [a$_2$] ++ z$_2$) $\iff$
+    (x$_1$ = x$_2$) $\wedge$ (a$_1$ = a$_2$) $\wedge$ (z$_1$ = z$_2$)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Reïnventing the wheel}
+Writing an existing definition from scratch
+\begin{lstlisting}
+List.count
+\end{lstlisting}
+\pause
+Developing lemmas about it
+\begin{lstlisting}
+List.count_eq_zero
+\end{lstlisting}
+\pause
+Not knowing existing theorems
+\begin{lstlisting}
+Classical.choose_spec
+Finset.prod_erase_eq_div
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Using too many ``collection types''}
+\begin{lstlisting}
+Fin n $\rightarrow$ T
+Array
+List
+Multiset
+Finset
+Fintype
+\end{lstlisting}
+\end{frame}
+
+\end{document}
