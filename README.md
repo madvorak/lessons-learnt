@@ -1,2 +1,3 @@
-# lessons-learnt
-TCS seminar talk
+# Lessons learnt from formalizing theoretical computer science
+
+In this talk, I will take you on an introspective journey through formalization of theoretical computer science in Lean, a state-of-the-art language for interactive theorem proving. Sometimes, two definitions of the same concept from theoretical computer science seem obviously equivalent, yet one of them is much easier to work with. However, good definitions and convenient notation are just a beginning of the story. Often, I thought that a proof of a certain theorem was clear, until I tried to write it formally. As if the inherent difficulties of theorem proving weren't enough, my own misjudgments at times led to additional setbacks in the process. In my presentation, I am going to highlight several mistakes I made during the formalization process and share lessons I learnt from them. While these lessons are not exclusive to computer-assisted theorem proving, the precision required by a formal language like Lean has made these mistakes much more apparent and instructive.
