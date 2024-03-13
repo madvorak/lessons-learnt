@@ -65,14 +65,13 @@ $$ S \Rightarrow S_1 S_2 \Rightarrow S_1 a\mskip1mu S_2 \Rightarrow S_1 b \Right
 
 \begin{frame}[fragile]
 \frametitle{Carelessly assuming union of assumptions}
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\footnotesize\ttfamily]
 [OrderedCancelAddCommMonoid C]
 lemma Function.HasMaxCutProperty.
     forbids_commutativeFractionalPolymorphism
 
 [OrderedAddCommMonoidWithInfima C]
-lemma FractionalOperation.
-    IsFractionalPolymorphismFor.
+lemma FractionalOperation.IsFractionalPolymorphismFor.
     expressivePowerVCSP
 
 [OrderedCancelAddCommMonoidWithInfima C]
@@ -84,6 +83,29 @@ The two latter classes extend \texttt{[CompleteSemilatticeInf C]}.
 The assumption is too strong!
 \begin{lstlisting}
 ($\exists$ x y : C, x < y) $\rightarrow$ False
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Not taking time to develop good notation}
+\begin{lstlisting}[basicstyle=\footnotesize\ttfamily]
+Multiset.sum (($\omega$.tt x).map (fun a => m * I.evalMinimize a))
+\end{lstlisting}
+\pause
+\begin{lstlisting}[basicstyle=\footnotesize\ttfamily]
+abbrev Multiset.summap {T M : Type*} [AddCommMonoid M]
+    (s : Multiset T) (f : T $\rightarrow$ M) : M :=
+  (s.map f).sum
+\end{lstlisting}
+\begin{lstlisting}[basicstyle=\footnotesize\ttfamily]
+Multiset.summap ($\omega$.tt x) (fun a => m * I.evalMinimize a)
+\end{lstlisting}
+\pause
+\begin{lstlisting}[basicstyle=\footnotesize\ttfamily]
+attribute [pp_dot] Multiset.summap
+\end{lstlisting}
+\begin{lstlisting}[basicstyle=\footnotesize\ttfamily]
+($\omega$.tt x).summap (fun a => m * I.evalMinimize a)
 \end{lstlisting}
 \end{frame}
 
@@ -145,6 +167,31 @@ Multiset
 Finset
 Fintype
 \end{lstlisting}
+\end{frame}
+
+\begin{frame}
+\frametitle{Jumping head-first into the full version}
+Better, when dealing with a difficult problem, is to:
+\begin{enumerate}
+\pause \item prove a simplified version (end to end)
+\pause \item learn the API for the ``one new thing''
+\pause \item discover if there is missing API
+\begin{enumerate} \pause
+	\item involve the community
+	\item write the missing API
+	\item Mathlib PR
+\end{enumerate}
+\pause \item state the theorem
+\pause \item break it into steps
+\pause \item state lemmata
+\pause \item prove the theorem
+\pause \item prove the lemmata
+\end{enumerate}
+\end{frame}
+
+\begin{frame}
+\frametitle{Thanks for your attention!}
+
 \end{frame}
 
 \end{document}
